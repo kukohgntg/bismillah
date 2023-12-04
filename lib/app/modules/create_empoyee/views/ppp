@@ -1,0 +1,31 @@
+// Stack(
+//                 children: [
+//                   Obx(
+//                     () => controller.imagePath.value == ''
+//                         ? CircleAvatar(
+//                             radius: 80,
+//                             backgroundImage: const NetworkImage(
+//                                 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
+//                           )
+//                         : CircleAvatar(
+//                             radius: 80,
+//                             backgroundImage: FileImage(
+//                               File(controller.imagePath.value),
+//                             ),
+//                           ),
+//                   ),
+//                   Positioned(
+//                     bottom: 1,
+//                     left: 100,
+//                     child: FloatingActionButton(
+//                       child: Icon(Icons.add_a_photo),
+//                       onPressed: () {
+//                         controller.selectImage();
+//                       },
+//                     ),
+//                   )
+//                 ],
+//               ),
+//               const SizedBox(
+//                 height: 25,
+//               ),
