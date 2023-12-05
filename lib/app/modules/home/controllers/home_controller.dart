@@ -71,6 +71,42 @@ class HomeController extends GetxController with StateMixin<List<Employee>> {
     Get.toNamed(Routes.CREATE_EMPOYEE, arguments: employee);
   }
 
+  deleteEmployee(Employee employee) async {
+    try {
+      FullScreenDialogLoader.showDialog();
+      await authRepository.deleteEmployee({
+        "documentId": employee.documentId,
+      }).then((value) async {
+        await authRepository.deleteEmployeeImage(employee.image);
+        FullScreenDialogLoader.cancelDialog();
+        CustomSnackBar.showSuccessSnackBar(
+            context: Get.context,
+            title: "Success",
+            message: "Employee Deleted");
+        Get.offAllNamed(Routes.HOME);
+      }).catchError((error) async {
+        FullScreenDialogLoader.cancelDialog();
+        if (error is AppwriteException) {
+          CustomSnackBar.showErrorSnackBar(
+              context: Get.context,
+              title: "Error",
+              message: error.response['message']);
+        } else {
+          CustomSnackBar.showErrorSnackBar(
+              context: Get.context,
+              title: "Error",
+              message: "Something went wrong");
+        }
+      });
+    } catch (e) {
+      FullScreenDialogLoader.cancelDialog();
+      CustomSnackBar.showErrorSnackBar(
+          context: Get.context,
+          title: "Error",
+          message: "Something went wrong");
+    }
+  }
+
   getEmployee() async {
     try {
       change(null, status: RxStatus.loading());

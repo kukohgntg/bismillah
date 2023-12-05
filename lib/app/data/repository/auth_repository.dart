@@ -17,4 +17,6 @@ class AuthRepository {
   Future<models.DocumentList> getEmployees() => appWriteProvider.getEmployees();
   Future<models.Document> updateEmployee(Map map) =>
       appWriteProvider.updateEmployee(map);
+  Future<dynamic> deleteEmployee(Map map) =>
+      appWriteProvider.deleteEmployee(map);
 }

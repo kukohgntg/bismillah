@@ -1,10 +1,9 @@
 // ignore_for_file: unnecessary_overrides
 
-import 'dart:ffi';
-
 import 'package:appwrite/appwrite.dart';
 import 'package:bismillah/app/data/models/employee_model.dart';
 import 'package:bismillah/app/data/repository/auth_repository.dart';
+import 'package:bismillah/app/routes/app_pages.dart';
 import 'package:bismillah/app/utils/appwrite_constant.dart';
 import 'package:bismillah/app/utils/custom_snack_bar.dart';
 import 'package:flutter/widgets.dart';
@@ -39,7 +38,6 @@ class CreateEmpoyeeController extends GetxController {
   var isEdit = false.obs;
   var imageUrl = ''.obs;
   late Employee employee;
-
   @override
   void onInit() {
     super.onInit();
@@ -96,18 +94,13 @@ class CreateEmpoyeeController extends GetxController {
     }
   }
 
-  void validateAndSave({
-    required String name,
-    required String departement,
-    required isEdit,
-  }) async {
+  void validateAndSave(
+      {required String name, required String departement}) async {
     isFormValid = formKey.currentState!.validate();
     if (!isFormValid) {
       return;
     } else {
       formKey.currentState!.save();
-      //TODO:https://youtu.be/haok75fnIQQ?si=1Gdt51BjUPTrWtSV&t=357
-      // if (!isEdit) {}
       if (imagePath.isNotEmpty) {
         try {
           FullScreenDialogLoader.showDialog();
@@ -126,9 +119,23 @@ class CreateEmpoyeeController extends GetxController {
               CustomSnackBar.showSuccessSnackBar(
                   context: Get.context,
                   title: "Success",
-                  message: "Data saved");
+                  message: "Data Saved");
+            }).catchError((error) async {
+              FullScreenDialogLoader.cancelDialog();
+              if (error is AppwriteException) {
+                CustomSnackBar.showErrorSnackBar(
+                    context: Get.context,
+                    title: "Error",
+                    message: error.response['message']);
+              } else {
+                CustomSnackBar.showErrorSnackBar(
+                    context: Get.context,
+                    title: "Error",
+                    message: "Shomething went wrong");
+              }
+              await authRepository.deleteEmployeeImage(uploadedFileId);
             });
-          }).catchError((error) async {
+          }).catchError((error) {
             FullScreenDialogLoader.cancelDialog();
             if (error is AppwriteException) {
               CustomSnackBar.showErrorSnackBar(
@@ -141,7 +148,6 @@ class CreateEmpoyeeController extends GetxController {
                   title: "Error",
                   message: "Shomething went wrong");
             }
-            await authRepository.deleteEmployeeImage(uploadedFileId);
           });
         } catch (e) {
           FullScreenDialogLoader.cancelDialog();
@@ -154,7 +160,7 @@ class CreateEmpoyeeController extends GetxController {
         CustomSnackBar.showErrorSnackBar(
             context: Get.context,
             title: "Error",
-            message: "Please select image");
+            message: "Please selection cancelled");
       }
     }
   }

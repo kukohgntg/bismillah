@@ -161,7 +161,7 @@ class CreateEmpoyeeView extends GetView<CreateEmpoyeeController> {
                     controller.validateAndSave(
                       name: controller.nameEditingController.text,
                       departement: controller.departementEditingController.text,
-                      isEdit:controller.isEdit.value
+                      // isEdit:controller.isEdit.value
                     );
                   },
                 ),

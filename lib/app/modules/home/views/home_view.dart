@@ -76,7 +76,9 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.deleteEmployee(state[index]);
+                      },
                       icon: const Icon(
                         Icons.delete,
                         color: Colors.red,
