@@ -7,10 +7,6 @@ import '../controllers/signup_controller.dart';
 // import 'my_textfield.dart';
 
 class SignupView extends GetView<SignupController> {
-  //TODO:https://youtu.be/BdOTN-VOAa4?si=ubDMUeBYIuL2b7Bi&t=405
-  //TODO:https://youtu.be/BdOTN-VOAa4?si=LsN6M21Frsf45TvV&t=404
-  // final TextEditingController _emailController = TextEditingController();
-  // final TextEditingController _passwordController = TextEditingController();
   SignupView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 
 import '../controllers/login_controller.dart';
 
-//TODO:https://youtu.be/BdOTN-VOAa4?si=Xrpr3BHXIQlc-zsA&t=291
 class LoginView extends GetView<LoginController> {
   LoginView({Key? key}) : super(key: key);
   @override

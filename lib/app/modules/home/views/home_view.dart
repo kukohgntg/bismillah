@@ -41,7 +41,7 @@ class HomeView extends GetView<HomeController> {
                 height: 100,
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: //TODO:https://youtu.be/ZRT2pLoOKc8?si=l9splGhT9aoBmLDv&t=233
+                  imageUrl: 
                       '${AppwriteConstants.endPoint}/storage/buckets/${AppwriteConstants.employeeBucketId}/files/${state[index].image}/view?project=${AppwriteConstants.projectID}',
                   placeholder: (context, url) => const Center(
                     child: CircularProgressIndicator(),
@@ -53,7 +53,6 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               title: Text(
-                //TODO:https://youtu.be/ZRT2pLoOKc8?si=VaYRwefTE9gDWv7m&t=234
                 state[index].name,
                 style: const TextStyle(fontSize: 16),
               ),
@@ -67,8 +66,7 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      //TODO:https://youtu.be/haok75fnIQQ?si=zTLEm_iuRdq9VEQ6&t=98
-                      // controller.moveToEditEmpoyee(state[index]);
+                      controller.moveToEditEmpoyee(state[index]);
                     },
                     icon: const Icon(
                       Icons.edit,
@@ -96,7 +94,7 @@ class HomeView extends GetView<HomeController> {
           child: Text(error!),
         ),
         onEmpty: const Center(
-          child: Text('No Post Found'),
+          child: Text('No Employee Found'),
         ),
       ),
       floatingActionButton: FloatingActionButton(

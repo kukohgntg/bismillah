@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 
 import '../controllers/create_empoyee_controller.dart';
 
-//TODO:https://youtu.be/pf5MGW4PK0s?si=aH6r3y56SqEvhlU0
 class CreateEmpoyeeView extends GetView<CreateEmpoyeeController> {
   const CreateEmpoyeeView({Key? key}) : super(key: key);
   @override
@@ -44,11 +43,29 @@ class CreateEmpoyeeView extends GetView<CreateEmpoyeeController> {
                                 File(controller.imagePath.value),
                               ),
                             )
-                          : CachedNetworkImage(
-                              imageUrl: controller.imageUrl.value,
-                              width: 100,
-                              height: 100,
-                            ))),
+                          : Container(
+                              width: 160,
+                              height: 160,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                      controller.imageUrl.value),
+                                ),
+                              ),
+                            )
+                      // CircleAvatar(
+                      //     radius: 80,
+                      //     // backgroundImage: NetworkImage(
+                      //     //   controller.imageUrl.value,
+                      //     // ),
+                      //     child: CachedNetworkImage(
+                      //       imageUrl: controller.imageUrl.value,
+                      //       width: 100,
+                      //       height: 100,
+                      //     ),
+                      //   )
+                      )),
                   Positioned(
                     bottom: 1,
                     left: 100,
@@ -159,10 +176,10 @@ class CreateEmpoyeeView extends GetView<CreateEmpoyeeController> {
                   ),
                   onPressed: () {
                     controller.validateAndSave(
-                      name: controller.nameEditingController.text,
-                      departement: controller.departementEditingController.text,
-                      // isEdit:controller.isEdit.value
-                    );
+                        name: controller.nameEditingController.text,
+                        departement:
+                            controller.departementEditingController.text,
+                        isEdit: controller.isEdit.value);
                   },
                 ),
               ),

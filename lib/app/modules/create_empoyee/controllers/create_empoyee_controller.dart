@@ -52,7 +52,8 @@ class CreateEmpoyeeController extends GetxController {
       nameEditingController.text = employee.name;
       departementEditingController.text = employee.departement;
       imageUrl.value =
-          "${AppwriteConstants.endPoint}/storage/buckets/${AppwriteConstants.employeeBucketId}/files/${employee.image}/view?/project=${AppwriteConstants.projectID}";
+          '${AppwriteConstants.endPoint}/storage/buckets/${AppwriteConstants.employeeBucketId}/files/${employee.image}/view?project=${AppwriteConstants.projectID}';
+      // "${AppwriteConstants.endPoint}/storage/buckets/${AppwriteConstants.employeeBucketId}/files/${employee.image}/view?/project=${AppwriteConstants.projectID}";
     }
   }
 
@@ -95,32 +96,52 @@ class CreateEmpoyeeController extends GetxController {
   }
 
   void validateAndSave(
-      {required String name, required String departement}) async {
+      {required String name,
+      required String departement,
+      required isEdit}) async {
     isFormValid = formKey.currentState!.validate();
     if (!isFormValid) {
       return;
     } else {
       formKey.currentState!.save();
-      if (imagePath.isNotEmpty) {
-        try {
-          FullScreenDialogLoader.showDialog();
-          await authRepository
-              .uploadEmployeeImage(imagePath.value)
-              .then((value) async {
-            uploadedFileId = value.$id;
-            await authRepository.createEmploye({
-              "name": name,
-              "departement": departement,
-              "createdBy": _getStorage.read("userId"),
-              "image": uploadedFileId,
-              "createdAt": DateTime.now().toIso8601String()
-            }).then((value) {
-              FullScreenDialogLoader.cancelDialog();
-              CustomSnackBar.showSuccessSnackBar(
-                  context: Get.context,
-                  title: "Success",
-                  message: "Data Saved");
-            }).catchError((error) async {
+      if (!isEdit) {
+        //Add
+        if (imagePath.isNotEmpty) {
+          try {
+            FullScreenDialogLoader.showDialog();
+            await authRepository
+                .uploadEmployeeImage(imagePath.value)
+                .then((value) async {
+              uploadedFileId = value.$id;
+              await authRepository.createEmploye({
+                "name": name,
+                "departement": departement,
+                "createdBy": _getStorage.read("userId"),
+                "image": uploadedFileId,
+                "createdAt": DateTime.now().toIso8601String()
+              }).then((value) {
+                FullScreenDialogLoader.cancelDialog();
+                CustomSnackBar.showSuccessSnackBar(
+                    context: Get.context,
+                    title: "Success",
+                    message: "Data Saved");
+              }).catchError((error) async {
+                FullScreenDialogLoader.cancelDialog();
+                if (error is AppwriteException) {
+                  CustomSnackBar.showErrorSnackBar(
+                      context: Get.context,
+                      title: "Error",
+                      message: error.response['message']);
+                } else {
+                  CustomSnackBar.showErrorSnackBar(
+                      context: Get.context,
+                      title: "Error",
+                      message: "Shomething went wrong");
+                }
+                //dellete uploaded file
+                await authRepository.deleteEmployeeImage(uploadedFileId);
+              });
+            }).catchError((error) {
               FullScreenDialogLoader.cancelDialog();
               if (error is AppwriteException) {
                 CustomSnackBar.showErrorSnackBar(
@@ -133,34 +154,119 @@ class CreateEmpoyeeController extends GetxController {
                     title: "Error",
                     message: "Shomething went wrong");
               }
-              await authRepository.deleteEmployeeImage(uploadedFileId);
             });
-          }).catchError((error) {
+          } catch (e) {
             FullScreenDialogLoader.cancelDialog();
-            if (error is AppwriteException) {
-              CustomSnackBar.showErrorSnackBar(
-                  context: Get.context,
-                  title: "Error",
-                  message: error.response['message']);
-            } else {
-              CustomSnackBar.showErrorSnackBar(
-                  context: Get.context,
-                  title: "Error",
-                  message: "Shomething went wrong");
-            }
-          });
-        } catch (e) {
-          FullScreenDialogLoader.cancelDialog();
+            CustomSnackBar.showErrorSnackBar(
+                context: Get.context,
+                title: "Error",
+                message: "Shomething went wrong");
+          }
+        } else {
           CustomSnackBar.showErrorSnackBar(
               context: Get.context,
               title: "Error",
-              message: "Shomething went wrong");
+              message: "Please selection cancelled");
         }
       } else {
-        CustomSnackBar.showErrorSnackBar(
-            context: Get.context,
-            title: "Error",
-            message: "Please selection cancelled");
+        //update
+        if (imagePath.isNotEmpty) {
+          //user has selected new imaage
+          try {
+            FullScreenDialogLoader.showDialog();
+            await authRepository
+                .uploadEmployeeImage(imagePath.value)
+                .then((value) async {
+              uploadedFileId = value.$id;
+              await authRepository.deleteEmployeeImage(employee.image);
+              await authRepository.createEmploye({
+                "name": name,
+                "departement": departement,
+                "createdBy": _getStorage.read("userId"),
+                "image": uploadedFileId,
+                "documentId": employee.documentId,
+              }).then((value) {
+                FullScreenDialogLoader.cancelDialog();
+                CustomSnackBar.showSuccessSnackBar(
+                    context: Get.context,
+                    title: "Success",
+                    message: "Employee Updated");
+                Get.offAllNamed(Routes.HOME);
+              }).catchError((error) async {
+                FullScreenDialogLoader.cancelDialog();
+                if (error is AppwriteException) {
+                  CustomSnackBar.showErrorSnackBar(
+                      context: Get.context,
+                      title: "Error",
+                      message: error.response['message']);
+                } else {
+                  CustomSnackBar.showErrorSnackBar(
+                      context: Get.context,
+                      title: "Error",
+                      message: "Shomething went wrong");
+                }
+                await authRepository.deleteEmployeeImage(uploadedFileId);
+              });
+            }).catchError((error) {
+              FullScreenDialogLoader.cancelDialog();
+              if (error is AppwriteException) {
+                CustomSnackBar.showErrorSnackBar(
+                    context: Get.context,
+                    title: "Error",
+                    message: error.response['message']);
+              } else {
+                CustomSnackBar.showErrorSnackBar(
+                    context: Get.context,
+                    title: "Error",
+                    message: "Shomething went wrong");
+              }
+            });
+          } catch (e) {
+            FullScreenDialogLoader.cancelDialog();
+            CustomSnackBar.showErrorSnackBar(
+                context: Get.context,
+                title: "Error",
+                message: "Shomething went wrong");
+          }
+        } else {
+          //user not selected new immge
+          try {
+            FullScreenDialogLoader.showDialog();
+            await authRepository.updateEmployee({
+              "name": name,
+              "departement": departement,
+              "createdBy": _getStorage.read("userId"),
+              "image": employee.image,
+              "documentId": employee.documentId,
+            }).then((value) {
+              FullScreenDialogLoader.cancelDialog();
+              CustomSnackBar.showSuccessSnackBar(
+                  context: Get.context,
+                  title: "Success",
+                  message: "Employee Updated");
+              Get.offAllNamed(Routes.HOME);
+            }).catchError((error) {
+              FullScreenDialogLoader.cancelDialog();
+              if (error is AppwriteException) {
+                CustomSnackBar.showErrorSnackBar(
+                    context: Get.context,
+                    title: "Error",
+                    message: error.response['message']);
+              } else {
+                CustomSnackBar.showErrorSnackBar(
+                    context: Get.context,
+                    title: "Error",
+                    message: "Shomething went wrong");
+              }
+            });
+          } catch (e) {
+            FullScreenDialogLoader.cancelDialog();
+            CustomSnackBar.showErrorSnackBar(
+                context: Get.context,
+                title: "Error",
+                message: "Shomething went wrong");
+          }
+        }
       }
     }
   }
