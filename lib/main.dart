@@ -22,7 +22,7 @@ class Main extends StatelessWidget {
       title: "Application",
       initialRoute:
           _getStorage.read("userId") != null ? Routes.HOME : Routes.LOGIN,
-      // _authController.isLoggedIn.value ? Routes.HOME : Routes.LOGIN,
+          // _authController.isLoggedIn.value ? Routes.HOME : Routes.LOGIN,
       getPages: AppPages.routes,
     );
   }

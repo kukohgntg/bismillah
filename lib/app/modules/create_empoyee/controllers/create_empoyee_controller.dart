@@ -125,6 +125,7 @@ class CreateEmpoyeeController extends GetxController {
                     context: Get.context,
                     title: "Success",
                     message: "Data Saved");
+                Get.offAllNamed(Routes.HOME);
               }).catchError((error) async {
                 FullScreenDialogLoader.cancelDialog();
                 if (error is AppwriteException) {
@@ -138,8 +139,7 @@ class CreateEmpoyeeController extends GetxController {
                       title: "Error",
                       message: "Shomething went wrong");
                 }
-                //dellete uploaded file
-                await authRepository.deleteEmployeeImage(uploadedFileId);
+                // await authRepository.deleteEmployeeImage(uploadedFileId);
               });
             }).catchError((error) {
               FullScreenDialogLoader.cancelDialog();
@@ -179,7 +179,7 @@ class CreateEmpoyeeController extends GetxController {
                 .then((value) async {
               uploadedFileId = value.$id;
               await authRepository.deleteEmployeeImage(employee.image);
-              await authRepository.createEmploye({
+              await authRepository.updateEmployee({
                 "name": name,
                 "departement": departement,
                 "createdBy": _getStorage.read("userId"),
@@ -205,6 +205,7 @@ class CreateEmpoyeeController extends GetxController {
                       title: "Error",
                       message: "Shomething went wrong");
                 }
+                //dellete uploaded file
                 await authRepository.deleteEmployeeImage(uploadedFileId);
               });
             }).catchError((error) {

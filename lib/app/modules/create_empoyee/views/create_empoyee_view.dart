@@ -43,29 +43,29 @@ class CreateEmpoyeeView extends GetView<CreateEmpoyeeController> {
                                 File(controller.imagePath.value),
                               ),
                             )
-                          : Container(
-                              width: 160,
-                              height: 160,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      controller.imageUrl.value),
-                                ),
+                          :
+                          // Container(
+                          //     width: 160,
+                          //     height: 160,
+                          //     decoration: BoxDecoration(
+                          //       shape: BoxShape.circle,
+                          //       image: DecorationImage(
+                          //         image: CachedNetworkImageProvider(
+                          //             controller.imageUrl.value),
+                          //       ),
+                          //     ),
+                          //   )
+                          CircleAvatar(
+                              radius: 80,
+                              backgroundImage: CachedNetworkImageProvider(
+                                controller.imageUrl.value,
                               ),
-                            )
-                      // CircleAvatar(
-                      //     radius: 80,
-                      //     // backgroundImage: NetworkImage(
-                      //     //   controller.imageUrl.value,
-                      //     // ),
-                      //     child: CachedNetworkImage(
-                      //       imageUrl: controller.imageUrl.value,
-                      //       width: 100,
-                      //       height: 100,
-                      //     ),
-                      //   )
-                      )),
+                              // child: CachedNetworkImage(
+                              //   imageUrl: controller.imageUrl.value,
+                              //   width: 100,
+                              //   height: 100,
+                              // ),
+                            ))),
                   Positioned(
                     bottom: 1,
                     left: 100,
